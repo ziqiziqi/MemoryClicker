@@ -8,6 +8,8 @@ let vars = {};
 
 let sel;
 
+
+
 function setup() {
   textAlign(CENTER);
   sel = createSelect();
@@ -25,12 +27,17 @@ function setup() {
   sel.option('10');
   sel.selected('0');
   sel.changed(mySelectEvent);
-
+  btn = document.getElementById("btn");
+  btn.addEventListener('click',function(event){
+    record();
+  });
   addNote();
 }
 
 function mySelectEvent() {
+  
   points = sel.value();
+  console.log("select points!"+points);
 }
 
 function addNote(){
@@ -39,12 +46,14 @@ function addNote(){
   memories = notes.value();
 }
 
-function keyIsPressed(Enter){
-  record();
-}
+// function keyIsPressed(Enter){
+//   record();
+// }
 
 function record() {
+  console.log("submit!")
   memories = notes.value();
+  console.log(memories);
 }
 
 
