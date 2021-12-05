@@ -4,13 +4,13 @@
  *
  * Licensed under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
- *
+ * 
  * Copyright 2012, Codrops
  * http://www.codrops.com
  */
 
 ;( function( $, window, undefined ) {
-
+	
 	'use strict';
 
 	/*
@@ -59,10 +59,10 @@
 		Modernizr = window.Modernizr;
 
 	$.PFold = function( options, element ) {
-
+		
 		this.$el = $( element );
 		this._init( options );
-
+		
 	};
 
 	// the options
@@ -71,7 +71,7 @@
 		perspective : 1200,
 		// each folding step's speed
 		speed : 450,
-		// each folding step's easing
+		// each folding step's easing 
 		easing : 'linear',
 		// delay between each (un)folding step (ms)
 		folddelay : 0,
@@ -79,12 +79,12 @@
 		folds : 2,
 		// the direction of each unfolding step
 		folddirection : ['right','top'],
-		// use overlays to simulate a shadow for each folding step
+		// use overlays to simulate a shadow for each folding step 
 		overlays : true,
-		// the main container moves (translation) in order to keep its initial position
+		// the main container moves (translation) in order to keep its initial position 
 		centered : false,
 		// allows us to specify a different speed for the container's translation
-		// values range : [0 - 1]
+		// values range : [0 - 1] 
 		// if 0 the container jumps immediately to the final position (translation).
 		// this is only valid if centered is true
 		containerSpeedFactor : 1,
@@ -99,7 +99,7 @@
 	$.PFold.prototype = {
 
 		_init : function( options ) {
-
+			
 			// options
 			this.options = $.extend( true, {}, $.PFold.defaults, options );
 
@@ -120,7 +120,7 @@
 			if( this.support ) {
 
 				this.$el.css( 'perspective', this.options.perspective + 'px' );
-
+				
 				// set the transition to the main container
 				// we will need to move it if:
 				// this.options.centered is true;
@@ -150,14 +150,14 @@
 			// this element is inserted in the main container and it will contain the initial and final content elements
 			this.$finalEl = $( '<div class="uc-final-wrapper"></div>' ).append( this.$iContent.clone().hide(), this.$fContent ).hide();
 			this.$el.append( this.$finalEl );
-
+			
 			// initial element's offset
 			this._setDimOffset();
 
 			// status
 			this.opened = false;
 			this.animating = false;
-
+			
 			// initialize events
 			this._initEvents();
 
@@ -186,7 +186,7 @@
 
 				// update offsets
 				self._setDimOffset();
-
+				
 			} );
 
 		},
@@ -202,7 +202,7 @@
 		// gets the values needed to translate the main container (if options.centered is true)
 		_getTranslationValue : function() {
 
-			var x = 0,
+			var x = 0, 
 				y = 0,
 				horizTimes = 0,
 				vertTimes = 0;
@@ -237,7 +237,7 @@
 						y -= this.initialDim.height * Math.pow( 2, vertTimes ) / 2;
 						vertTimes += 1;
 						break;
-
+				
 				}
 
 			}
@@ -251,9 +251,9 @@
 		// gets the accumulated values for left, right, top and bottom once the element is opened
 		_getAccumulatedValue : function() {
 
-			var l = 0,
+			var l = 0, 
 				r = 0,
-				t = 0,
+				t = 0, 
 				b = 0,
 				horizTimes = 0,
 				vertTimes = 0;
@@ -288,7 +288,7 @@
 						b += this.initialDim.height * Math.pow( 2, vertTimes );
 						vertTimes += 1;
 						break;
-
+				
 				}
 
 			}
@@ -304,9 +304,9 @@
 		// gets the width and height of the element when it is opened
 		_getFinalDim : function() {
 
-			var l = 0,
+			var l = 0, 
 				r = 0,
-				t = 0,
+				t = 0, 
 				b = 0,
 				horizTimes = 0,
 				vertTimes = 0;
@@ -327,7 +327,7 @@
 
 						vertTimes += 1;
 						break;
-
+				
 				}
 
 			}
@@ -356,7 +356,7 @@
 				w = this.lastDirection === 'left' || this.lastDirection === 'right' ? this.lastStyle.width * 2 : this.lastStyle.width,
 				h = this.lastDirection === 'left' || this.lastDirection === 'right' ? this.lastStyle.height : this.lastStyle.height * 2,
 				l = this.lastDirection === 'left' ? this.lastStyle.left - this.lastStyle.width : this.lastStyle.left,
-				t = this.lastDirection === 'top' ? this.lastStyle.top - this.lastStyle.height : this.lastStyle.top;
+				t = this.lastDirection === 'top' ? this.lastStyle.top - this.lastStyle.height : this.lastStyle.top;	
 
 			}
 
@@ -395,7 +395,7 @@
 			// We need to keep the right sizes and positions for these 2 elements, so we need to cache the previous step's state.
 
 			step |= 0;
-
+			
 			var self = this,
 				styleCSS = ( action === 'fold' ) ? {
 					width : this.lastStyle.width,
@@ -493,7 +493,7 @@
 						.remove();
 
 					this.$finalEl.css( styleCSS ).show().children().eq( contentIdx ).show();
-
+					
 					this.opened = ( action === 'fold' ) ? false : true;
 					this.animating = false;
 					// nothing else to do
@@ -524,9 +524,9 @@
 
 			// transition properties for the step
 			if( this.support ) {
-
+				
 				styleCSS.transition = 'all ' + this.options.speed + 'ms ' + this.options.easing;
-
+			
 			}
 
 			var unfoldClass = 'uc-unfold-' + direction,
@@ -568,7 +568,7 @@
 
 				}
 				else {
-
+					
 					// goto next step
 					self._start( action, step + 1 );
 
@@ -585,7 +585,7 @@
 					self.$topFrontOverlay.css( 'opacity', tfo );
 
 				}
-
+			
 			} , 30 );
 
 		},
@@ -676,7 +676,7 @@
 				case 'bottom' :
 					contentTopBackStyle = 'margin-top: -' + styleCSS.height + 'px';
 					break;
-				case 'top' :
+				case 'top' : 
 					contentBottomStyle = 'margin-top: -' + styleCSS.height + 'px';
 					break;
 				case 'left' :
@@ -789,68 +789,68 @@
 		}
 
 	};
-
+	
 	var logError = function( message ) {
 
 		if ( window.console ) {
 
 			window.console.error( message );
-
+		
 		}
 
 	};
-
+	
 	$.fn.pfold = function( options ) {
 
 		var instance = $.data( this, 'pfold' );
-
+		
 		if ( typeof options === 'string' ) {
-
+			
 			var args = Array.prototype.slice.call( arguments, 1 );
-
+			
 			this.each(function() {
-
+			
 				if ( !instance ) {
 
 					logError( "cannot call methods on pfold prior to initialization; " +
 					"attempted to call method '" + options + "'" );
 					return;
-
+				
 				}
-
+				
 				if ( !$.isFunction( instance[options] ) || options.charAt(0) === "_" ) {
 
 					logError( "no such method '" + options + "' for pfold instance" );
 					return;
-
+				
 				}
-
+				
 				instance[ options ].apply( instance, args );
-
+			
 			});
-
-		}
+		
+		} 
 		else {
-
+		
 			this.each(function() {
-
+				
 				if ( instance ) {
 
 					instance._init();
-
+				
 				}
 				else {
 
 					instance = $.data( this, 'pfold', new $.PFold( options, this ) );
-
+				
 				}
 
 			});
-
+		
 		}
-
+		
 		return instance;
-
+		
 	};
-
-} )
+	
+} )( jQuery, window );
