@@ -1,19 +1,26 @@
-let table,diary,slider,points,memories,newpoints;
-let vars = {};
-// function preload(){
-//   table = loadTable(url,'csv','header');
-//   // let backgroundpath = chrome.runtime.getURL('image/shu.jpeg');
-//   // let backgroundpic = loadImage(backgroundpath);
-// }
-
+let table,diary,slider,points,newpoints;
+var memories;
+let notebg,font;
 let sel;
 
 
+function preload(){
+  let notebgpath = chrome.runtime.getURL('image/notebg.png');
+    notebg = loadImage(notebgpath);
+  let Pathfont = chrome.runtime.getURL('font/Comic Sans MS.ttf');
+  font = loadFont(Pathfont);
+}
 
 function setup() {
-  textAlign(CENTER);
+  createCanvas(1000,600);
+  image(notebg,200,0,800,600);
   sel = createSelect();
-  sel.position(width/2, height/2+100);
+  textSize(15);
+  textFont(font);
+  fill(0);
+  let s = 'How many points do you give to this memory?';
+  text(s,330,430);
+  sel.position(700, 417);
   sel.option('0');
   sel.option('1');
   sel.option('2');
@@ -25,26 +32,19 @@ function setup() {
   sel.option('8');
   sel.option('9');
   sel.option('10');
-  sel.selected('0');
+  sel.selected('5');
   sel.changed(mySelectEvent);
   btn = document.getElementById("btn");
   btn.addEventListener('click',function(event){
     record();
   });
-  addNote();
 }
 
 function mySelectEvent() {
-  
   points = sel.value();
   console.log("select points!"+points);
 }
 
-function addNote(){
-  notes = createInput();
-  notes.position(width/2,height/2);
-  memories = notes.value();
-}
 
 // function keyIsPressed(Enter){
 //   record();
@@ -52,8 +52,22 @@ function addNote(){
 
 function record() {
   console.log("submit!")
-  memories = notes.value();
-  console.log(memories);
+  fetchNotes();
+  // console.log(memories);
+}
+
+function fetchNotes(){
+  document.querySelector('.pages-holder').innerHTML='';
+  chrome.runtime.sendMessage({command:"fetchNotes",data:{}},(response)=>{
+    memories = response.data;
+    // var nav = '<ul>';
+    // window.memories = [];
+    // for(const nodeId in memories){
+    //   nav += '<li data-noteId="'+nodeId'">'+notes[nodeId].icon+''+notes[nodeId].title+'</li>';
+    // }
+    // nav += '</ul>';
+    // document.querySelector('.pages-holder').innerHTML = nav;
+  });
 }
 
 
