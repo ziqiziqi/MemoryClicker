@@ -9,6 +9,7 @@
 		font-family: 'Playfair display', Georgia, Serif;
 		font-weight: 900;
 		height:50%;
+		padding:2px;
 		color:black;
 		cursor:text;
 		position:absolute;
@@ -78,6 +79,7 @@
 	}
 
 </style>
+
 </head>
 
 	<script type="text/javascript" src="../../js/p5.min.js"></script>
@@ -87,8 +89,8 @@
 <body>
 		<div class="main">
 			<section class="holder">
-				<h1 contenteditable="true" placeholder = "Enter the date"></h1>
-				<div class="post-body" contenteditable="true" placeholder = "Write today's memory here..."></div>
+				<h1 id=enterdate contenteditable="true" placeholder = "Enter the date"></h1>
+				<div class="post-body" id=writememory contenteditable="true" placeholder = "Write today's memory here..."></div>
 			</section>
 		</div>
 		<button id="btn">Sumbit</button>

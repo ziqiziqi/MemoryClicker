@@ -1,12 +1,13 @@
-let table,diary,slider,points,newpoints;
-var memories;
-let notebg,font;
-let sel;
+let olddate,oldmemory,oldpoints,newpoints;
+let notebg,font,paperplane;
+let sel,s,button,update,like,dislike,liketext,disliketext;
 
 
 function preload(){
   let notebgpath = chrome.runtime.getURL('image/notebg.png');
     notebg = loadImage(notebgpath);
+  let paperplanepath = chrome.runtime.getURL('image/pp.png');
+    paperplane = loadImage(paperplanepath);
   let Pathfont = chrome.runtime.getURL('font/Comic Sans MS.ttf');
   font = loadFont(Pathfont);
 }
@@ -18,7 +19,7 @@ function setup() {
   textSize(15);
   textFont(font);
   fill(0);
-  let s = 'How many points do you give to this memory?';
+  s = 'How many points do you give to this memory?';
   text(s,330,430);
   sel.position(700, 417);
   sel.option('0');
@@ -37,74 +38,82 @@ function setup() {
   btn = document.getElementById("btn");
   btn.addEventListener('click',function(event){
     record();
+    //effect();
   });
 }
 
 function mySelectEvent() {
-  points = sel.value();
-  console.log("select points!"+points);
+  oldpoints = sel.value();
+  console.log("select points!"+oldpoints);
 }
 
-
-// function keyIsPressed(Enter){
-//   record();
-// }
 
 function record() {
   console.log("submit!")
   fetchNotes();
-  // console.log(memories);
+  sel.remove();
+  clear();
+  document.getElementById("btn").remove();
+  document.getElementById("enterdate").remove();
+  document.getElementById("writememory").remove();
+
+   button = createButton('recall');
+   button.position(520, 460);
+   button.mousePressed(recall);
+}
+
+
+function effect() {
+  image(paperplane,200,0,800,600);
+  paperplane.play();
 }
 
 function fetchNotes(){
-  document.querySelector('.pages-holder').innerHTML='';
-  chrome.runtime.sendMessage({command:"fetchNotes",data:{}},(response)=>{
-    memories = response.data;
-    // var nav = '<ul>';
-    // window.memories = [];
-    // for(const nodeId in memories){
-    //   nav += '<li data-noteId="'+nodeId'">'+notes[nodeId].icon+''+notes[nodeId].title+'</li>';
-    // }
-    // nav += '</ul>';
-    // document.querySelector('.pages-holder').innerHTML = nav;
-  });
+olddate = document.getElementById('enterdate');
+oldmemory = document.getElementById('writememory');
 }
 
+function recall(){
+  button.remove();
 
-//   removeElements();
-//
-//   let newRow = table.addRow();
-//   let d = day();
-//   let m = month();
-//   let y = year();
-//   newRow.setString('date', d +'/' +m +'/'+y);
-//   newRow.setString('memory', memories);
-//   newRow.setString('point', points);
-//
-// //   for (let r = 0; r < table.getRowCount(); r++)
-// //   for (let c = 0; c < table.getColumnCount(); c++) {
-// //       print(table.getString(r, c));
-// // }
-//
-//   recall();
-//
-// }
-//
-// function recall(){
-//
-//   fill(10);
-//   textSize(25);
-//   // textFont(font);
-//
-//   let pastdate = table.getColumn('date');
-//   let pastmemory = table.getColumn('memory');
-//
-//   print(pastmemory);
-//   text(pastdate,0,10);
-//   text(pastmemory,0,50);
-//
-// }
-//
+  createCanvas(1000,600);
+  image(notebg,200,0,800,600);
+  textSize(15);
+  textFont(font);
+  fill(0);
+  liketext = 'Still want to remember it?';
+  like = createCheckbox(' ',false);
+  text(liketext,330,430);
+  disliketext = 'Do not want to remember it?'
+  dislike = createCheckbox(' ',false);
+  text(disliketext,630,430);
+  like.position(300, 417);
+  dislike.position(600,417);
+  like.changed(likeevent);
+  dislike.changed(dislikeevent);
+
+  update = createButton('Update');
+  update.position(520, 460);
+  update.mousePressed(clearagain);
+
+}
+
+function clearagain(){
+  update.remove();
+  clear();
+  like.remove();
+  dislike.remove();
+  effect();
+}
+
+function likeevent(){
+  newpoints = oldpoints+1;
+}
+
+function dislikeevent(){
+  newpoints = oldpoints-1;
+}
+
 // // chrome.storage.sync.set({key: value}, function() {
 // //   console.log('Value is set to ' + value);
 // // });
