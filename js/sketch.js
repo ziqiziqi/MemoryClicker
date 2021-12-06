@@ -2,6 +2,8 @@ let olddate,oldmemory,oldpoints,newpoints;
 let notebg,font,paperplane;
 let sel,s,button,update,like,dislike,liketext,disliketext;
 var isFresh = true;
+var db = connectDatabase();
+maxN = 5;
 
 
 function preload(){
@@ -23,18 +25,18 @@ function setup() {
   s = 'How many points do you give to this memory?';
   text(s,330,430);
   sel.position(700, 417);
-  sel.option('0');
-  sel.option('1');
-  sel.option('2');
-  sel.option('3');
-  sel.option('4');
-  sel.option('5');
-  sel.option('6');
-  sel.option('7');
-  sel.option('8');
-  sel.option('9');
-  sel.option('10');
-  sel.selected('5');
+  sel.option(0);
+  sel.option(1);
+  sel.option(2);
+  sel.option(3);
+  sel.option(4);
+  sel.option(5);
+  sel.option(6);
+  sel.option(7);
+  sel.option(8);
+  sel.option(9);
+  sel.option(10);
+  sel.selected(5);
   sel.changed(mySelectEvent);
   btn = document.getElementById("btn");
   btn.addEventListener('click',function(event){
@@ -78,8 +80,13 @@ function effect() {
 }
 
 function fetchNotes(){
-olddate = document.getElementById('enterdate');
-oldmemory = document.getElementById('writememory');
+olddate = document.getElementById('enterdate').innerText;
+oldmemory = document.getElementById('writememory').innerText;
+score = sel.value(); 
+console.log(olddate);
+console.log(oldmemory);
+//addContent(oldmemory,score);
+deleteID(5);
 }
 
 function recall(){
@@ -145,9 +152,12 @@ function dataHandler(transaction, results)
         // Each row is a standard JavaScript array indexed by
         // column names.
         var row = results.rows.item(i);
-        string = string + row['name'] + " (ID "+row['id']+")\n";
+        string = string + row['name'] + " ID "+row['id']+ " Score "+ row['score'] + "\n";
     }
     console.log(string);
+    if(rows.length > maxN){
+      autoRemove();
+    }
     // alert(string);
 }
 
@@ -156,6 +166,7 @@ function nullDataHandler(transaction, results) {
   console.log("sql error");
 }
  
+//demo database init
 function createTables(db)
 {
     db.transaction(
@@ -164,21 +175,25 @@ function createTables(db)
             /* The first query causes the transaction to (intentionally) fail if the table exists. */
             transaction.executeSql('CREATE TABLE idea(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL DEFAULT "Be happy", score int NOT NULL DEFAULT 5, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);', [], nullDataHandler, errorHandler);
             /* These insertions will be skipped if the table already exists. */
-            transaction.executeSql('insert into idea (name, score) VALUES ("work", 1);', [], nullDataHandler, errorHandler);
             transaction.executeSql('insert into idea (name, score) VALUES ("sleep", 1);', [], nullDataHandler, errorHandler);
-            transaction.executeSql('insert into idea (name, score) VALUES ("eat", 2);', [], nullDataHandler, errorHandler);
             transaction.executeSql('insert into idea (name, score) VALUES ("skate", 3);', [], nullDataHandler, errorHandler);
         }
     );
 }
 
-function sqlTest(){
-  console.log("begin sql test");
+
+function connectDatabase(){
   var shortName = 'mydatabase';
   var version = '1.0';
   var displayName = 'My Important Database';
   var maxSize = 65536; // in bytes
   var db = openDatabase(shortName, version, displayName, maxSize);
+  return db;
+}
+
+function sqlTest(){
+  console.log("begin sql test");
+  
   if(isFresh){
     console.log("create database");
     createTables(db);
@@ -187,13 +202,56 @@ function sqlTest(){
   
   db.transaction(
     function (transaction) {
-        transaction.executeSql("SELECT * from idea where score=1;",
+        transaction.executeSql("SELECT * from idea",
             [], // array of values for the ? placeholders
             dataHandler, errorHandler);
     }
 );
 }
+//add item into database
+function addContent(name,score){
+  console.log(`try to add content ${name} ${score}`)
+  db.transaction(
+    function (transaction) {
+      transaction.executeSql(`insert into idea (name, score) VALUES ("${name}", ${score});`, [], nullDataHandler, errorHandler);
+    }
+);
+}
 
+//auto remove least score item when it is full
+function autoRemove(){
+  db.transaction(
+    function (transaction){
+      transaction.executeSql("SELECT * from idea order by score asc",
+      [],
+      dataHandler,errorHandler);
+    }
+  );
+}
+
+function dataRemoveHandler(transaction, results)
+{
+    // Handle the results
+    var string = "rm:\n\n";
+    var id=0;
+    for (var i=0; i<1; i++) {
+        var row = results.rows.item(i);
+        string = string + row['name'] + " ID "+row['id']+ " Score "+ row['score'] + "\n";
+        id = row['id'];
+    }
+    console.log(string);
+    deleteID(id);
+    // alert(string);
+}
+
+function deleteID(id){
+  console.log(`try to delete content ${id}`)
+  db.transaction(
+    function (transaction) {
+      transaction.executeSql(`delete from idea where ID = ${id};`, [], nullDataHandler, errorHandler);
+    }
+); 
+}
 // // chrome.storage.sync.set({key: value}, function() {
 // //   console.log('Value is set to ' + value);
 // // });
