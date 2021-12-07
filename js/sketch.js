@@ -136,7 +136,6 @@ function showSubmit() {
 function record() {
   console.log("submit!")
   fetchNotes();
-  showContent(true);
 }
 
 
