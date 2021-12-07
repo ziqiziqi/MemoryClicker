@@ -17,14 +17,14 @@ function preload(){
 
 function setup() {
   createCanvas(1000,600);
-  image(notebg,200,0,800,600);
+  image(notebg,width/5,0,width*0.8,height);
   sel = createSelect();
   textSize(15);
   textFont(font);
   fill(0);
   s = 'How many points do you give to this memory?';
-  text(s,330,430);
-  sel.position(700, 417);
+  text(s,width*0.33,height*0.65);
+  sel.position(width*0.7, height*0.71);
   sel.option(0);
   sel.option(1);
   sel.option(2);
@@ -40,8 +40,8 @@ function setup() {
   sel.changed(mySelectEvent);
   btn = document.getElementById("btn");
   btn.addEventListener('click',function(event){
-    //record();
-    recordTest();
+    record();
+    //recordTest();
     //effect();
   });
 }
@@ -65,7 +65,7 @@ function record() {
   sel.remove();
   clear();
   document.getElementById("btn").remove();
-  document.getElementById("enterdate").remove();
+  // document.getElementById("enterdate").remove();
   document.getElementById("writememory").remove();
 
    button = createButton('recall');
@@ -80,10 +80,10 @@ function effect() {
 }
 
 function fetchNotes(){
-olddate = document.getElementById('enterdate').innerText;
+// olddate = document.getElementById('enterdate').innerText;
 oldmemory = document.getElementById('writememory').innerText;
-score = sel.value(); 
-console.log(olddate);
+score = sel.value();
+// console.log(olddate);
 console.log(oldmemory);
 //addContent(oldmemory,score);
 deleteID(5);
@@ -93,18 +93,18 @@ function recall(){
   button.remove();
 
   createCanvas(1000,600);
-  image(notebg,200,0,800,600);
+  image(notebg,width/5,0,width*0.8,height);
   textSize(15);
   textFont(font);
   fill(0);
   liketext = 'Still want to remember it?';
   like = createCheckbox(' ',false);
-  text(liketext,330,430);
+  text(liketext,width*0.33,height*0.65);
   disliketext = 'Do not want to remember it?'
   dislike = createCheckbox(' ',false);
-  text(disliketext,630,430);
-  like.position(300, 417);
-  dislike.position(600,417);
+  text(disliketext,width*0.63,height*0.65);
+  like.position(width*0.3, height*0.71);
+  dislike.position(width*0.6,height*0.71);
   like.changed(likeevent);
   dislike.changed(dislikeevent);
 
@@ -122,12 +122,14 @@ function clearagain(){
   effect();
 }
 
+//TBD
 function likeevent(){
-  newpoints = oldpoints+1;
+  newpoints = oldpoints++;
 }
 
+//TBD
 function dislikeevent(){
-  newpoints = oldpoints-1;
+  newpoints = oldpoints--;
 }
 
 //sqlite part
@@ -137,13 +139,13 @@ function errorHandler(transaction, error)
     // error.code is a numeric error code
     //alert('Oops.  Error was '+error.message+' (Code '+error.code+')');
     console.log('Oops.  Error was '+error.message+' (Code '+error.code+')');
- 
+
     // Handle errors here
     var we_think_this_error_is_fatal = true;
     if (we_think_this_error_is_fatal) return true;
     return false;
 }
- 
+
 function dataHandler(transaction, results)
 {
     // Handle the results
@@ -162,16 +164,16 @@ function dataHandler(transaction, results)
 }
 
 
-function nullDataHandler(transaction, results) { 
+function nullDataHandler(transaction, results) {
   console.log("sql error");
 }
- 
+
 //demo database init
 function createTables(db)
 {
     db.transaction(
         function (transaction) {
- 
+
             /* The first query causes the transaction to (intentionally) fail if the table exists. */
             transaction.executeSql('CREATE TABLE idea(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL DEFAULT "Be happy", score int NOT NULL DEFAULT 5, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);', [], nullDataHandler, errorHandler);
             /* These insertions will be skipped if the table already exists. */
@@ -193,13 +195,13 @@ function connectDatabase(){
 
 function sqlTest(){
   console.log("begin sql test");
-  
+
   if(isFresh){
     console.log("create database");
     createTables(db);
     isFresh = false;
   }
-  
+
   db.transaction(
     function (transaction) {
         transaction.executeSql("SELECT * from idea",
@@ -250,12 +252,5 @@ function deleteID(id){
     function (transaction) {
       transaction.executeSql(`delete from idea where ID = ${id};`, [], nullDataHandler, errorHandler);
     }
-); 
+);
 }
-// // chrome.storage.sync.set({key: value}, function() {
-// //   console.log('Value is set to ' + value);
-// // });
-//
-// // chrome.storage.sync.get(['key'], function(result) {
-// //   console.log('Value currently is ' + result.key);
-// // });
