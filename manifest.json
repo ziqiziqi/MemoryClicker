@@ -2,6 +2,7 @@
   "name": "MemoryClicker",
   "version": "0.1",
   "manifest_version": 2,
+  "type" : "module",
   "description": "Trace how memory works",
   "icons": {
     "16": "icons/icon16.png",
