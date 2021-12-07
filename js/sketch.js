@@ -5,14 +5,37 @@ var sel,s,update,like,dislike,likeText,dislikeText;
 var isFresh = true;
 var maxN = 5;
 var thisID, db, submitted, btn_submit, btn_rescore;
-var state = "submit";
+
+function setDate(){
+  let date = new Date();
+  d = date.getTime();
+  localStorage.lastDate = d;
+}
+
+function getDate(){
+  if(localStorage.lastDate){
+    return localStorage.lastDate;
+  }else{
+    return 0;
+  }
+
+}
+
 function checkSubmit(){
-  return false;
+  var currentDate = new Date();
+  var during = currentDate.getTime() - getDate();
+  console.log(during);
+  //if(during>24*3600*1000){
+  if(during>5000){
+    return false;
+  }else{
+    return true;
+  }
 }
 
 function clearScreen(){
   console.log("clear");
-  sel.remove();
+  //sel.remove();
   btn_submit.remove();
   oldmemory.remove();
 }
@@ -28,7 +51,12 @@ function initElements(){
 
 }
 
-function showContent(){
+function showContent(playEffect){
+  if(playEffect){
+    sel.remove();
+    setDate();
+    //effect();
+  }
   clearScreen();
   createCanvas(1000,600);
   image(notebg,width/5,0,width*0.8,height);
@@ -59,7 +87,7 @@ function setup(){
   submitted = checkSubmit();
   if(submitted){
     // show
-    showContent();
+    showContent(false);
   }else{
     // to submit
     showSubmit();
@@ -108,11 +136,7 @@ function showSubmit() {
 function record() {
   console.log("submit!")
   fetchNotes();
-
-  if(state == "content"){
-    sel.remove();
-    showContent();
-  }
+  showContent(true);
 }
 
 
@@ -123,7 +147,6 @@ function effect() {
 
 function fetchNotes(){
 addContent(oldmemory.innerText, sel.value());
-//state = "content";
 sqlTest();
 }
 
@@ -172,7 +195,7 @@ function dataHandler(transaction, results)
       autoRemove();
     }
     else{
-      showContent();
+      showContent(true);
     }
 }
 
@@ -238,7 +261,6 @@ function addContent(name,score){
 function getLastDataHandler(transaction, results){
   thisID = results.rows.item(0)["last_insert_rowid()"];
   console.log(thisID);
-
 }
 //auto remove least score item when it is full
 function autoRemove(){
@@ -267,10 +289,9 @@ function dataRemoveHandler(transaction, results)
 
     if(id == thisID){
       alert("Insert Error, this idea is weaker than any others!");
-      state = "submit";
     }
     else{
-      showContent();
+      showContent(true);
     }
     
     // alert(string);
