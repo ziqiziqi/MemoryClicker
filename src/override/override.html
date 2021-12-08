@@ -3,22 +3,8 @@
 <head>
 	<title>MemoryClicker</title>
 	<meta charset="utf-8">
-	<!-- <script  src="popup.js">
-					</script> -->
-
 	<link rel="stylesheet" href="../../css/paperplate.css">
 	<style>
-
-	/* h1{
-		font-family: 'Playfair display', Georgia, Serif;
-		font-weight: 900;
-		height:50%;
-		padding:2px;
-		color:black;
-		cursor:text;
-		position:absolute;
-		top:200px;left:300px;
-	} */
 	body{
 		margin: 0;
 		padding:0;
@@ -32,6 +18,13 @@
 		background-attachment: fixed;
 		background-size: 100% 100%;
 	}
+	img{
+		z-index:1;
+		height:80%;
+		width:80%;
+		position:absolute;
+		top:15%; left:15%;
+}
 	div.main{
 		display:flex;
 		height:100%;
@@ -54,17 +47,19 @@
 		content:"";
 	}
 	div.post-body{
+		z-index:2;
 		font-family: 'Playfair display', Georgia, Serif;
 		font-weight: 800;
 		padding:2px;
 		height:50%;
-		color:brown;
+		color:#274e13;
 		cursor:text;
 		position:absolute;
-		top:260px;left:300px;
+		top:40%;left:23%;
 		overflow-wrap:normal;
 	}
 	 button{
+		z-index:5;
 		height:6%;
 		width:8%;
 		padding:10px;
@@ -75,16 +70,27 @@
 		cursor:pointer;
 		letter-spacing: 2px;
 		position:absolute;
-		top: 460px; left: 520px;
+		top:420px; left: 50%;
+	}
+	p{
+	z-index:4;
+	position:absolute;
+	top:60%;left:23%;
+	font-family: 'Playfair display', Georgia, Serif;
+	font-weight: 700;
+	padding:1px;
+	color:#19320d;
+	overflow-wrap:normal;
 	}
 	/* button:hover{
 		background:brown;
 		color:white;
 	} */
-
-	/* paperplate effect */
-
-
+	select{
+		z-index: 3;
+		position:absolute;
+		top:63%;left:75%;
+	}
 
 </style>
 
@@ -108,7 +114,21 @@
 			<div class="left"></div>
 			<div class="right"></div>
 		</button>
-
+		<img id=notebg src="../../image/notebg.png">
+		<p id=question>How many points do you give to this memory?</p>
+		<select id=sel>
+			<option id=0 value="0">0</option>
+			<option id=1 value="1">1</option>
+			<option id=2 value="2">2</option>
+			<option id=3 value="3">3</option>
+			<option id=4 value="4">4</option>
+			<option id=5 value="5">5</option>
+			<option id=6 value="6">6</option>
+			<option id=7 value="7">7</option>
+			<option id=8 value="8">8</option>
+			<option id=9 value="9">9</option>
+			<option id=10 value="10">10</option>
+		</select>
 		<!-- <div id=container class="beginning">
 			<div id=left-wing>
 				<div class="top_left curvable" id=curvable></div>

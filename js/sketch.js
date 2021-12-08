@@ -1,13 +1,11 @@
 var olddate,oldmemory,oldpoints,newpoints;
-var notebg,font,paperplane;
+var notebg,font,paperplane,showStage;
 var sel,s,update,like,dislike,likeText,dislikeText;
 
 var isFresh = true;
 var maxN = 5;
 var thisID, db, submitted, btn_submit, btn_rescore;
-
-
-
+var value;
 
 function setDate(){
   let date = new Date();
@@ -41,6 +39,8 @@ function clearScreen(){
   //sel.remove();
   btn_submit.remove();
   oldmemory.remove();
+  question.remove();
+  notebg.remove();
 }
 
 function initElements(){
@@ -62,19 +62,19 @@ function showContent(playEffect){
   }
   clearScreen();
   createCanvas(1000,600);
-  image(notebg,width/5,0,width*0.8,height);
+  image(showStage,width/7,0,width*0.8,height);
   textSize(15);
   textFont(font);
   contentText = 'Idea Here';
-  text(contentText,width*0.5,height*0.3);
+  text(contentText,width*0.3,height*0.34);
   liketext = 'Still want to remember it?';
   like = createCheckbox(' ',false);
-  text(liketext,width*0.33,height*0.65);
+  text(liketext,width*0.53,height*0.60);
   disliketext = 'Do not want to remember it?'
   dislike = createCheckbox(' ',false);
-  text(disliketext,width*0.63,height*0.65);
-  like.position(width*0.3, height*0.71);
-  dislike.position(width*0.6,height*0.71);
+  text(disliketext,width*0.53,height*0.65);
+  like.position(width*0.5, height*0.66);
+  dislike.position(width*0.5,height*0.71);
 
   //change happens when clicking button rather than checking the box
   //like.changed(likeEvent);
@@ -99,8 +99,9 @@ function setup(){
 }
 function preload(){
   console.log("preload");
-  let notebgpath = chrome.runtime.getURL('image/notebg.png');
-    notebg = loadImage(notebgpath);
+  let sSpath = chrome.runtime.getURL('image/showStage.png');
+    showStage = loadImage(sSpath);
+    notebg = document.getElementById('notebg');
   let paperplanepath = chrome.runtime.getURL('image/pp.png');
     paperplane = loadImage(paperplanepath);
   let Pathfont = chrome.runtime.getURL('font/Comic Sans MS.ttf');
@@ -110,26 +111,26 @@ function preload(){
 function showSubmit() {
   console.log("showSubmit");
   createCanvas(1000,600);
-  image(notebg,width/5,0,width*0.8,height);
-  sel = createSelect();
-  textSize(15);
-  textFont(font);
-  fill(0);
-  s = 'How many points do you give to this memory?';
-  text(s,width*0.33,height*0.65);
-  sel.position(width*0.7, height*0.71);
-  for(i=0;i<=10;i++){
-    sel.option(i);
-  }
+  // image(notebg,width/5,0,width*0.8,height);
+  sel = document.getElementById('sel');
+  value = sel.options[sel.selectedIndex].value;
+  // textSize(15);
+  // textFont(font);
+  // fill(0);
+  // text(s,width*0.33,height*0.65);
+  // sel.position(width*0.7, height*0.77);
+  // for(i=0;i<=10;i++){
+  //   sel.option(i);
+//  }
 
-  sel.selected(5);
-  //sel.changed(mySelectEvent);
-  //btn_submit.addEventListener('click',function(event){
-  //  record();
-  //  // paperplate();
-  //  //recordTest();
-  //  //effect();
-  //});
+  // sel.selected(5);
+  // sel.changed(mySelectEvent);
+  btn_submit.addEventListener('click',function(event){
+   record();
+   // paperplate();
+   //recordTest();
+   //effect();
+  });
   let getVar = variable => getComputedStyle(btn_submit).getPropertyValue(variable);
   btn_submit.addEventListener('click', e=>{
     if(!btn_submit.classList.contains('active')) {
@@ -237,7 +238,7 @@ function showSubmit() {
 
 });
 
-  
+
 }
 
 //paperplate Effect
@@ -404,13 +405,13 @@ function record() {
 }
 
 
-function effect() {
-  image(paperplane,200,0,800,600);
-  paperplane.play();
-}
+// function effect() {
+//   image(paperplane,200,0,800,600);
+//   paperplane.play();
+// }
 
 function fetchNotes(){
-addContent(oldmemory.innerText, sel.value());
+addContent(oldmemory.innerText, value);
 sqlTest();
 }
 
