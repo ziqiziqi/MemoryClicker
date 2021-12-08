@@ -6,6 +6,9 @@ var isFresh = true;
 var maxN = 5;
 var thisID, db, submitted, btn_submit, btn_rescore;
 
+
+
+
 function setDate(){
   let date = new Date();
   d = date.getTime();
@@ -47,7 +50,7 @@ function initElements(){
 
   var btn_sql = createButton('debug');
   btn_sql.position(520, 660);
-  btn_sql.mousePressed(sqlTest); 
+  btn_sql.mousePressed(sqlTest);
 
 }
 
@@ -63,7 +66,7 @@ function showContent(playEffect){
   textSize(15);
   textFont(font);
   contentText = 'Idea Here';
-  text(contentText,width*0.5,height*0.3); 
+  text(contentText,width*0.5,height*0.3);
   liketext = 'Still want to remember it?';
   like = createCheckbox(' ',false);
   text(liketext,width*0.33,height*0.65);
@@ -72,14 +75,14 @@ function showContent(playEffect){
   text(disliketext,width*0.63,height*0.65);
   like.position(width*0.3, height*0.71);
   dislike.position(width*0.6,height*0.71);
-  
+
   //change happens when clicking button rather than checking the box
   //like.changed(likeEvent);
-  //dislike.changed(dislikeEvent); 
+  //dislike.changed(dislikeEvent);
 
   btn_rescore = createButton('confirm');
   btn_rescore.position(520, 460);
-  btn_rescore.mousePressed(recall); 
+  btn_rescore.mousePressed(recall);
 }
 
 function setup(){
@@ -92,7 +95,7 @@ function setup(){
     // to submit
     showSubmit();
   }
-  
+
 }
 function preload(){
   console.log("preload");
@@ -123,10 +126,164 @@ function showSubmit() {
   //sel.changed(mySelectEvent);
   btn_submit.addEventListener('click',function(event){
     record();
+    // paperplate();
     //recordTest();
     //effect();
   });
 }
+
+//paperplate Effect
+document.querySelectorAll('.button').forEach(button => {
+
+    let getVar = variable => getComputedStyle(button).getPropertyValue(variable);
+
+    button.addEventListener('click', e => {
+
+        if(!button.classList.contains('active')) {
+
+            button.classList.add('active');
+
+            gsap.to(button, {
+                keyframes: [{
+                    '--left-wing-first-x': 50,
+                    '--left-wing-first-y': 100,
+                    '--right-wing-second-x': 50,
+                    '--right-wing-second-y': 100,
+                    duration: .2,
+                    onComplete() {
+                        gsap.set(button, {
+                            '--left-wing-first-y': 0,
+                            '--left-wing-second-x': 40,
+                            '--left-wing-second-y': 100,
+                            '--left-wing-third-x': 0,
+                            '--left-wing-third-y': 100,
+                            '--left-body-third-x': 40,
+                            '--right-wing-first-x': 50,
+                            '--right-wing-first-y': 0,
+                            '--right-wing-second-x': 60,
+                            '--right-wing-second-y': 100,
+                            '--right-wing-third-x': 100,
+                            '--right-wing-third-y': 100,
+                            '--right-body-third-x': 60
+                        })
+                    }
+                }, {
+                    '--left-wing-third-x': 20,
+                    '--left-wing-third-y': 90,
+                    '--left-wing-second-y': 90,
+                    '--left-body-third-y': 90,
+                    '--right-wing-third-x': 80,
+                    '--right-wing-third-y': 90,
+                    '--right-body-third-y': 90,
+                    '--right-wing-second-y': 90,
+                    duration: .2
+                }, {
+                    '--rotate': 50,
+                    '--left-wing-third-y': 95,
+                    '--left-wing-third-x': 27,
+                    '--right-body-third-x': 45,
+                    '--right-wing-second-x': 45,
+                    '--right-wing-third-x': 60,
+                    '--right-wing-third-y': 83,
+                    duration: .25
+                }, {
+                    '--rotate': 55,
+                    '--plane-x': -8,
+                    '--plane-y': 24,
+                    duration: .2
+                }, {
+                    '--rotate': 40,
+                    '--plane-x': 45,
+                    '--plane-y': -180,
+                    '--plane-opacity': 0,
+                    duration: .3,
+                    onComplete() {
+                        setTimeout(() => {
+                            button.removeAttribute('style');
+                            gsap.fromTo(button, {
+                                opacity: 0,
+                                y: -8
+                            }, {
+                                opacity: 1,
+                                y: 0,
+                                clearProps: true,
+                                duration: .3,
+                                onComplete() {
+                                    button.classList.remove('active');
+                                }
+                            })
+                        }, 2000)
+                    }
+                }]
+            })
+
+            gsap.to(button, {
+                keyframes: [{
+                    '--text-opacity': 0,
+                    '--border-radius': 0,
+                    '--left-wing-background': getVar('--primary-darkest'),
+                    '--right-wing-background': getVar('--primary-darkest'),
+                    duration: .1
+                }, {
+                    '--left-wing-background': getVar('--primary'),
+                    '--right-wing-background': getVar('--primary'),
+                    duration: .1
+                }, {
+                    '--left-body-background': getVar('--primary-dark'),
+                    '--right-body-background': getVar('--primary-darkest'),
+                    duration: .4
+                }, {
+                    '--success-opacity': 1,
+                    '--success-scale': 1,
+                    duration: .25,
+                    delay: .25
+                }]
+            })
+
+        }
+
+    })
+
+});
+
+// function paperplate(){
+//   setTimeout(paperplate1,200);
+// }
+//
+// function paperplate1(){
+//   setTimeout(paperplate2,2800);
+//   let first = document.getElementById('container');
+//   console.log(first);
+//   first.classList.remove('beginning');
+//   let second = document.getElementById("curvable");
+//   second.classList.add('curved');
+// }
+//
+// function paperplate2(){
+//   setTimeout(paperplate3,2000);
+//   let third = document.getElementById('container');
+//   third.classList.add('hover');
+// }
+//
+// function paperplate3(){
+//   setTimeout(paperplate4,600);
+//   let fourth = document.getElementById('container');
+//   fourth.classList.add('fly_away_first');
+// }
+//
+// function paperplate4(){
+//   setTimeout(paperplate5,3000);
+//   let fifth = document.getElementById('container');
+//   fifth.classList.add('fly_away');
+// }
+//
+// function paperplate5(){
+//   let sixth = document.getElementById('container');
+//   sixth.classList.remove('fly_away', 'fly_away_first', 'hover');
+//   sixth.classList.add('beginning');
+//   let seventh = document.getElementById("curvable");
+//   seventh.classList.remove('curved');
+// }
 
 //function mySelectEvent() {
 //  oldpoints = sel.value();
@@ -292,7 +449,7 @@ function dataRemoveHandler(transaction, results)
     else{
       showContent(true);
     }
-    
+
     // alert(string);
 }
 

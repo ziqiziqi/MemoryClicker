@@ -29,5 +29,9 @@
   },
   "chrome_url_overrides": {
     "newtab": "src/override/override.html"
+  },
+  "content_scripts":{
+    "css": "css/pfold.css",
+    "js": "PFold/js/sketch.js"
   }
 }
