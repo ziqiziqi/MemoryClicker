@@ -32,6 +32,6 @@
   },
   "content_scripts":{
     "css": "css/pfold.css",
-    "js": "PFold/js/sketch.js"
+    "js": "js/sketch.js"
   }
 }
