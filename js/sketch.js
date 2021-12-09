@@ -1,12 +1,12 @@
 var olddate,oldmemory,oldpoints,newpoints;
 var notebg,font,paperplane,showStage;
-var sel,s,update,like,dislike,likeText,dislikeText;
+var thedate,sel,s,update,like,dislike,likeText,dislikeText;
 
 var isFresh = true;
 var maxN = 365;
 var thisID, db, submitted, btn_submit, btn_rescore;
 var value;
-var timeLimit = 24 * 3600 * 1000;
+var timeLimit = 24*3600 * 1000;
 
 function setDate(){
   let date = new Date();
@@ -39,6 +39,7 @@ function clearScreen(){
   oldmemory.remove();
   question.remove();
   notebg.remove();
+
 }
 
 function initElements(){
@@ -46,9 +47,9 @@ function initElements(){
   btn_submit = document.getElementById("btn");
   db = connectDatabase();
 
-  var btn_sql = createButton('debug');
-  btn_sql.position(520, 660);
-  btn_sql.mousePressed(sqlTest);
+  // var btn_sql = createButton('debug');
+  // btn_sql.position(520, 660);
+  // btn_sql.mousePressed(sqlTest);
   if(localStorage.lastIdea == null){
     localStorage.lastIdea = "Your Idea today";
   }
@@ -58,16 +59,38 @@ function initElements(){
 
 }
 
+
+function setup(){
+  initElements();
+  submitted = checkSubmit();
+  if(submitted){
+    // show
+    showContent(false,null);
+
+
+  }else{
+    // to submit
+    showSubmit();
+  }
+}
+
+
 function showContent(playEffect, content){
   if(playEffect){
     sel.remove();
+    thedate.remove();
     setDate();
   }
+  thedate = document.getElementById('thedate');
+  sel = document.getElementById('sel');
+  sel.remove();
+  thedate.remove();
   clearScreen();
   createCanvas(1000,600);
   image(showStage,width/7,0,width*0.8,height);
   textSize(15);
   textFont(font);
+  text('01/01/2022',width*0.3,height*0.3);
   if(content == null){
     contentText = localStorage.lastIdea;
     thisID = localStorage.lastID;
@@ -86,27 +109,12 @@ function showContent(playEffect, content){
   like.position(width*0.5, height*0.66);
   dislike.position(width*0.5,height*0.71);
 
-  //change happens when clicking button rather than checking the box
-  //like.changed(likeEvent);
-  //dislike.changed(dislikeEvent);
-
   btn_rescore = createButton('confirm');
   btn_rescore.position(520, 460);
   btn_rescore.mousePressed(recall);
 }
 
-function setup(){
-  initElements();
-  submitted = checkSubmit();
-  if(submitted){
-    // show
-    showContent(false,null);
-  }else{
-    // to submit
-    showSubmit();
-  }
 
-}
 function preload(){
   console.log("preload");
   let sSpath = chrome.runtime.getURL('image/showStage.png');
@@ -122,6 +130,7 @@ function showSubmit() {
   console.log("showSubmit");
   createCanvas(1000,600);
   // image(notebg,width/5,0,width*0.8,height);
+  thedate = document.getElementById('thedate');
   sel = document.getElementById('sel');
   value = sel.options[sel.selectedIndex].value;
   // sel.changed(mySelectEvent);
@@ -302,13 +311,13 @@ function recall(){
   }
 }
 
-//TBD
+
 function likeEvent(id){
   // newpoints = oldpoints++;
   updateScore(id,1);
 }
 
-//TBD
+
 function dislikeEvent(id){
   // newpoints = oldpoints--;
   updateScore(id,-1);
@@ -355,7 +364,7 @@ function chooseDataHandler(transaction, results)
     }
     console.log(i+" "+contents[i]+" get idea");
     localStorage.lastIdea = contents[i-1];
-    localStorage.lastID = thisID; 
+    localStorage.lastID = thisID;
 
     showContent(true, contents[i-1]);
 }
@@ -493,7 +502,7 @@ function getIdea(){
     function (transaction) {
         transaction.executeSql("SELECT * from idea", [], chooseDataHandler, errorHandler);
     }
-); 
+);
 }
 
 function shrink(){
@@ -502,5 +511,5 @@ function shrink(){
     function (transaction) {
       transaction.executeSql(`update idea set score = score+${i};`, [], nullDataHandler, errorHandler);
     }
-  ); 
+  );
 }
