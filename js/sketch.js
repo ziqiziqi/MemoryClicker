@@ -1,12 +1,12 @@
 var olddate,oldmemory,oldpoints,newpoints;
 var notebg,font,paperplane,showStage;
-var thedate,sel,s,update,like,dislike,likeText,dislikeText;
+var thedate,sel,s,update,like,dislike,likeText,dislikeText,question;
 
 var isFresh = true;
 var maxN = 365;
 var thisID, db, submitted, btn_submit, btn_rescore;
 var value;
-var timeLimit = 24*3600 * 1000;
+var timeLimit = 5 * 1000;
 
 function setDate(){
   let date = new Date();
@@ -36,9 +36,9 @@ function checkSubmit(){
 function clearScreen(){
   console.log("clear");
   btn_submit.remove();
-  oldmemory.remove();
-  question.remove();
-  notebg.remove();
+  // oldmemory.remove();
+  // question.remove();
+  // notebg.remove();
 
 }
 
@@ -77,14 +77,14 @@ function setup(){
 
 function showContent(playEffect, content){
   if(playEffect){
-    sel.remove();
-    thedate.remove();
+    // sel.remove();
+    // thedate.remove();\
     setDate();
   }
-  thedate = document.getElementById('thedate');
-  sel = document.getElementById('sel');
-  sel.remove();
-  thedate.remove();
+  // thedate = document.getElementById('thedate');
+  // sel = document.getElementById('sel');
+  // sel.remove();
+  // thedate.remove();
   clearScreen();
   createCanvas(1000,600);
   image(showStage,width/7,0,width*0.8,height);
@@ -133,9 +133,14 @@ function showSubmit() {
   thedate = document.getElementById('thedate');
   sel = document.getElementById('sel');
   value = sel.options[sel.selectedIndex].value;
+  question = document.getElementById('question');
   // sel.changed(mySelectEvent);
   btn_submit.addEventListener('click',function(event){
-   // paperplate();
+    sel.remove();
+    thedate.remove();
+    notebg.remove();
+    oldmemory.remove();
+    question.remove();
   });
   let getVar = variable => getComputedStyle(btn_submit).getPropertyValue(variable);
   btn_submit.addEventListener('click', e=>{
@@ -199,18 +204,20 @@ function showSubmit() {
               duration: .3,
               onComplete() {
                   setTimeout(() => {
-                      btn_submit.removeAttribute('style');
+                      // btn_submit.removeAttribute('style');
                       gsap.fromTo(btn_submit, {
-                          opacity: 0,
-                          y: -8
+                          // opacity: 0,
+                          // y: -8
                       }, {
                           opacity: 1,
                           y: 0,
-                          clearProps: true,
-                          duration: .3,
+                          // clearProps: true,
+                          duration: .25,
                           onComplete() {
-                              btn_submit.classList.remove('active');
+                              // btn_submit.classList.remove('active');
                               record();
+                              // btn_submit.remove();
+
                           }
                       })
                   }, 2000)
@@ -236,14 +243,15 @@ function showSubmit() {
           }, {
               '--success-opacity': 1,
               '--success-scale': 1,
-              duration: .25,
-              delay: .25
+              duration: .5,
+              delay: .5
           }]
       })
 
   }
 
 });
+
 }
 
 // function paperplate(){
