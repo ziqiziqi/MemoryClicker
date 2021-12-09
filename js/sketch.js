@@ -19,7 +19,6 @@ function getDate(){
   }else{
     return 0;
   }
-
 }
 
 function checkSubmit(){
@@ -36,7 +35,6 @@ function checkSubmit(){
 
 function clearScreen(){
   console.log("clear");
-  //sel.remove();
   btn_submit.remove();
   oldmemory.remove();
   question.remove();
@@ -54,18 +52,18 @@ function initElements(){
 
 }
 
-function showContent(playEffect){
+function showContent(playEffect, content){
   if(playEffect){
     sel.remove();
     setDate();
-    //effect();
   }
   clearScreen();
   createCanvas(1000,600);
   image(showStage,width/7,0,width*0.8,height);
   textSize(15);
   textFont(font);
-  contentText = 'Idea Here';
+  contentText = content;
+  console.log(content);
   text(contentText,width*0.3,height*0.34);
   liketext = 'Still want to remember it?';
   like = createCheckbox(' ',false);
@@ -90,7 +88,7 @@ function setup(){
   submitted = checkSubmit();
   if(submitted){
     // show
-    showContent(false);
+    showContent(false,null);
   }else{
     // to submit
     showSubmit();
@@ -114,22 +112,9 @@ function showSubmit() {
   // image(notebg,width/5,0,width*0.8,height);
   sel = document.getElementById('sel');
   value = sel.options[sel.selectedIndex].value;
-  // textSize(15);
-  // textFont(font);
-  // fill(0);
-  // text(s,width*0.33,height*0.65);
-  // sel.position(width*0.7, height*0.77);
-  // for(i=0;i<=10;i++){
-  //   sel.option(i);
-//  }
-
-  // sel.selected(5);
   // sel.changed(mySelectEvent);
   btn_submit.addEventListener('click',function(event){
-   record();
    // paperplate();
-   //recordTest();
-   //effect();
   });
   let getVar = variable => getComputedStyle(btn_submit).getPropertyValue(variable);
   btn_submit.addEventListener('click', e=>{
@@ -204,6 +189,7 @@ function showSubmit() {
                           duration: .3,
                           onComplete() {
                               btn_submit.classList.remove('active');
+                              record();
                           }
                       })
                   }, 2000)
@@ -237,123 +223,7 @@ function showSubmit() {
   }
 
 });
-
-
 }
-
-//paperplate Effect
-// document.querySelectorAll('.button').forEach(button => {
-
-//     let getVar = variable => getComputedStyle(button).getPropertyValue(variable);
-
-//     button.addEventListener('click', e => {
-
-//         if(!button.classList.contains('active')) {
-
-//             button.classList.add('active');
-
-//             gsap.to(button, {
-//                 keyframes: [{
-//                     '--left-wing-first-x': 50,
-//                     '--left-wing-first-y': 100,
-//                     '--right-wing-second-x': 50,
-//                     '--right-wing-second-y': 100,
-//                     duration: .2,
-//                     onComplete() {
-//                         gsap.set(button, {
-//                             '--left-wing-first-y': 0,
-//                             '--left-wing-second-x': 40,
-//                             '--left-wing-second-y': 100,
-//                             '--left-wing-third-x': 0,
-//                             '--left-wing-third-y': 100,
-//                             '--left-body-third-x': 40,
-//                             '--right-wing-first-x': 50,
-//                             '--right-wing-first-y': 0,
-//                             '--right-wing-second-x': 60,
-//                             '--right-wing-second-y': 100,
-//                             '--right-wing-third-x': 100,
-//                             '--right-wing-third-y': 100,
-//                             '--right-body-third-x': 60
-//                         })
-//                     }
-//                 }, {
-//                     '--left-wing-third-x': 20,
-//                     '--left-wing-third-y': 90,
-//                     '--left-wing-second-y': 90,
-//                     '--left-body-third-y': 90,
-//                     '--right-wing-third-x': 80,
-//                     '--right-wing-third-y': 90,
-//                     '--right-body-third-y': 90,
-//                     '--right-wing-second-y': 90,
-//                     duration: .2
-//                 }, {
-//                     '--rotate': 50,
-//                     '--left-wing-third-y': 95,
-//                     '--left-wing-third-x': 27,
-//                     '--right-body-third-x': 45,
-//                     '--right-wing-second-x': 45,
-//                     '--right-wing-third-x': 60,
-//                     '--right-wing-third-y': 83,
-//                     duration: .25
-//                 }, {
-//                     '--rotate': 55,
-//                     '--plane-x': -8,
-//                     '--plane-y': 24,
-//                     duration: .2
-//                 }, {
-//                     '--rotate': 40,
-//                     '--plane-x': 45,
-//                     '--plane-y': -180,
-//                     '--plane-opacity': 0,
-//                     duration: .3,
-//                     onComplete() {
-//                         setTimeout(() => {
-//                             button.removeAttribute('style');
-//                             gsap.fromTo(button, {
-//                                 opacity: 0,
-//                                 y: -8
-//                             }, {
-//                                 opacity: 1,
-//                                 y: 0,
-//                                 clearProps: true,
-//                                 duration: .3,
-//                                 onComplete() {
-//                                     button.classList.remove('active');
-//                                 }
-//                             })
-//                         }, 2000)
-//                     }
-//                 }]
-//             })
-
-//             gsap.to(button, {
-//                 keyframes: [{
-//                     '--text-opacity': 0,
-//                     '--border-radius': 0,
-//                     '--left-wing-background': getVar('--primary-darkest'),
-//                     '--right-wing-background': getVar('--primary-darkest'),
-//                     duration: .1
-//                 }, {
-//                     '--left-wing-background': getVar('--primary'),
-//                     '--right-wing-background': getVar('--primary'),
-//                     duration: .1
-//                 }, {
-//                     '--left-body-background': getVar('--primary-dark'),
-//                     '--right-body-background': getVar('--primary-darkest'),
-//                     duration: .4
-//                 }, {
-//                     '--success-opacity': 1,
-//                     '--success-scale': 1,
-//                     duration: .25,
-//                     delay: .25
-//                 }]
-//             })
-
-//         }
-
-//     })
-
-// });
 
 // function paperplate(){
 //   setTimeout(paperplate1,200);
@@ -404,24 +274,18 @@ function record() {
   fetchNotes();
 }
 
-
-// function effect() {
-//   image(paperplane,200,0,800,600);
-//   paperplane.play();
-// }
-
 function fetchNotes(){
-addContent(oldmemory.innerText, value);
+addContent(oldmemory.innerText, sel.value);
 sqlTest();
 }
 
 function recall(){
   btn_rescore.remove();
-  if(like.checked)
+  if(like.checked())
   {
     likeEvent(thisID);
   }
-  else if(dislike.checked){
+  else if(dislike.checked()){
     dislikeEvent(thisID);
   }
 }
@@ -447,6 +311,41 @@ function errorHandler(transaction, error)
     return false;
 }
 
+function chooseDataHandler(transaction, results)
+{
+    // Handle the results
+    var l = results.rows.length;
+    var ids = [];
+    var contents = [];
+    var dates = [];
+    var staris = [0];
+    for (let i=0; i<l; i++) {
+        let row = results.rows.item(i);
+        console.log(row);
+        ids.push(row['id']);
+        contents.push(row['name']);
+        dates.push(row['date']);
+        staris.push(staris[staris.length-1] + row['score']);
+        // string = string + row['name'] + " ID "+row['id']+ " Score "+ row['score'] + "\n";
+    }
+    // console.log(string);
+
+    var choose = Math.floor((Math.random() * staris[l-1])+1);
+    console.log(staris);
+    console.log(choose);
+    console.log(contents);
+    var i;
+    for(i =1;i<=l;i++){
+      if(choose<=staris[i]){
+        thisID = ids[i-1];
+        break;
+      }
+    }
+    console.log(i+" "+contents[i]+" get idea");
+
+    showContent(true, contents[i-1]);
+}
+
 function dataHandler(transaction, results)
 {
     // Handle the results
@@ -460,7 +359,7 @@ function dataHandler(transaction, results)
       autoRemove();
     }
     else{
-      showContent(true);
+      getIdea();
     }
 }
 
@@ -493,16 +392,9 @@ function connectDatabase(){
 
 function sqlTest(){
   console.log("begin sql test");
-  //if(isFresh){
-  //  console.log("create database");
-  //  createTables(db);
-  //  isFresh = false;
-  //}
   db.transaction(
     function (transaction) {
-        transaction.executeSql("SELECT * from idea",
-            [], // array of values for the ? placeholders
-            dataHandler, errorHandler);
+        transaction.executeSql("SELECT * from idea", [], dataHandler, errorHandler);
     }
 );
 }
@@ -556,7 +448,8 @@ function dataRemoveHandler(transaction, results)
       alert("Insert Error, this idea is weaker than any others!");
     }
     else{
-      showContent(true);
+      getIdea();
+    //  //showContent(true);
     }
 
     // alert(string);
@@ -581,5 +474,9 @@ db.transaction(
 }
 
 function getIdea(){
-
+  db.transaction(
+    function (transaction) {
+        transaction.executeSql("SELECT * from idea", [], chooseDataHandler, errorHandler);
+    }
+); 
 }
