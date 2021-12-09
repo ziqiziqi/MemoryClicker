@@ -3,9 +3,10 @@ var notebg,font,paperplane,showStage;
 var sel,s,update,like,dislike,likeText,dislikeText;
 
 var isFresh = true;
-var maxN = 5;
+var maxN = 365;
 var thisID, db, submitted, btn_submit, btn_rescore;
 var value;
+var timeLimit = 24 * 3600 * 1000;
 
 function setDate(){
   let date = new Date();
@@ -25,8 +26,7 @@ function checkSubmit(){
   var currentDate = new Date();
   var during = currentDate.getTime() - getDate();
   console.log(during);
-  //if(during>24*3600*1000){
-  if(during>5000){
+  if(during > timeLimit){
     return false;
   }else{
     return true;
@@ -49,6 +49,12 @@ function initElements(){
   var btn_sql = createButton('debug');
   btn_sql.position(520, 660);
   btn_sql.mousePressed(sqlTest);
+  if(localStorage.lastIdea == null){
+    localStorage.lastIdea = "Your Idea today";
+  }
+  if(localStorage.lastID == null){
+    localStorage.lastID = 0;
+  }
 
 }
 
@@ -62,7 +68,13 @@ function showContent(playEffect, content){
   image(showStage,width/7,0,width*0.8,height);
   textSize(15);
   textFont(font);
-  contentText = content;
+  if(content == null){
+    contentText = localStorage.lastIdea;
+    thisID = localStorage.lastID;
+  }
+  else{
+    contentText = content;
+  }
   console.log(content);
   text(contentText,width*0.3,height*0.34);
   liketext = 'Still want to remember it?';
@@ -342,6 +354,8 @@ function chooseDataHandler(transaction, results)
       }
     }
     console.log(i+" "+contents[i]+" get idea");
+    localStorage.lastIdea = contents[i-1];
+    localStorage.lastID = thisID; 
 
     showContent(true, contents[i-1]);
 }
@@ -412,6 +426,7 @@ function addContent(name,score){
       transaction.executeSql(`select last_insert_rowid() from idea`, [], getLastDataHandler, errorHandler);
     }
   )
+  shrink();
 }
 
 //get last insert id
@@ -479,4 +494,13 @@ function getIdea(){
         transaction.executeSql("SELECT * from idea", [], chooseDataHandler, errorHandler);
     }
 ); 
+}
+
+function shrink(){
+  var i= -0.1;
+  db.transaction(
+    function (transaction) {
+      transaction.executeSql(`update idea set score = score+${i};`, [], nullDataHandler, errorHandler);
+    }
+  ); 
 }
