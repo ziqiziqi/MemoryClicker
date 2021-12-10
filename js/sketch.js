@@ -3,7 +3,7 @@ var notebg,font,paperplane,showStage;
 var thedate,sel,s,update,like,dislike,likeText,dislikeText,question;
 
 var isFresh = true;
-var maxN = 365;
+var maxN = 5;
 var thisID, db, submitted, btn_submit, btn_rescore;
 var value;
 var timeLimit = 5 * 1000;
@@ -254,44 +254,6 @@ function showSubmit() {
 
 }
 
-// function paperplate(){
-//   setTimeout(paperplate1,200);
-// }
-//
-// function paperplate1(){
-//   setTimeout(paperplate2,2800);
-//   let first = document.getElementById('container');
-//   console.log(first);
-//   first.classList.remove('beginning');
-//   let second = document.getElementById("curvable");
-//   second.classList.add('curved');
-// }
-//
-// function paperplate2(){
-//   setTimeout(paperplate3,2000);
-//   let third = document.getElementById('container');
-//   third.classList.add('hover');
-// }
-//
-// function paperplate3(){
-//   setTimeout(paperplate4,600);
-//   let fourth = document.getElementById('container');
-//   fourth.classList.add('fly_away_first');
-// }
-//
-// function paperplate4(){
-//   setTimeout(paperplate5,3000);
-//   let fifth = document.getElementById('container');
-//   fifth.classList.add('fly_away');
-// }
-//
-// function paperplate5(){
-//   let sixth = document.getElementById('container');
-//   sixth.classList.remove('fly_away', 'fly_away_first', 'hover');
-//   sixth.classList.add('beginning');
-//   let seventh = document.getElementById("curvable");
-//   seventh.classList.remove('curved');
-// }
 
 //function mySelectEvent() {
 //  oldpoints = sel.value();
@@ -514,7 +476,7 @@ function getIdea(){
 }
 
 function shrink(){
-  var i= -0.1;
+  var i= -0.01;
   db.transaction(
     function (transaction) {
       transaction.executeSql(`update idea set score = score+${i};`, [], nullDataHandler, errorHandler);
