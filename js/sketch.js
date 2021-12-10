@@ -76,7 +76,8 @@ function setup(){
   submitted = checkSubmit();
   if(submitted){
     // show
-    showContent(false,null);
+    getIdea();
+    //showContent(false,null);
   }else{
     // to submit
     showSubmit();
@@ -127,11 +128,11 @@ function showContent(fromsubmit, content){
   dislike.position(width*0.5,height*0.71);
 
   console.log(localStorage.liked);
-  if(localStorage.liked ==0){
+  //if(localStorage.liked ==0){
     btn_rescore = createButton('confirm');
     btn_rescore.position(520, 460);
     btn_rescore.mousePressed(recall);
-  }
+ // }
 }
 
 
