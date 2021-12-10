@@ -4,9 +4,10 @@ var thedate,sel,s,update,like,dislike,likeText,dislikeText,question;
 
 var isFresh = true;
 var maxN = 5;
-var thisID, db, submitted, btn_submit, btn_rescore;
+var db, submitted, btn_submit, btn_rescore;
+var thisID, thisContent, thisDate, thisScore;
 var value;
-var timeLimit = 5 * 1000;
+var timeLimit =  10*  1000;
 
 function setDate(){
   let date = new Date();
@@ -16,6 +17,7 @@ function setDate(){
 
 function getDate(){
   if(localStorage.lastDate){
+    console.log(localStorage.lastDate);
     return localStorage.lastDate;
   }else{
     return 0;
@@ -27,6 +29,7 @@ function checkSubmit(){
   var during = currentDate.getTime() - getDate();
   console.log(during);
   if(during > timeLimit){
+    localStorage.liked = 0;
     return false;
   }else{
     return true;
@@ -35,17 +38,26 @@ function checkSubmit(){
 
 function clearScreen(){
   console.log("clear");
-  btn_submit.remove();
-  // oldmemory.remove();
-  // question.remove();
-  // notebg.remove();
-
+  //sel.remove();
+  sel.style.display = 'none';
+  notebg.style.display = 'none';
+  oldmemory.style.display = 'none';
+  question.style.display = 'none';
+  btn_submit.style.display = 'none';
+  thedate.style.display = 'none';
 }
 
 function initElements(){
   oldmemory = document.getElementById('writememory');
   btn_submit = document.getElementById("btn");
   db = connectDatabase();
+  createTables(db);
+  thedate = document.getElementById('thedate');
+  datenow = new Date();
+  thedate.innerHTML = datenow.toLocaleDateString();
+  sel = document.getElementById('sel');
+  value = sel.options[sel.selectedIndex].value;
+  question = document.getElementById('question');
 
   // var btn_sql = createButton('debug');
   // btn_sql.position(520, 660);
@@ -56,7 +68,6 @@ function initElements(){
   if(localStorage.lastID == null){
     localStorage.lastID = 0;
   }
-
 }
 
 
@@ -66,8 +77,6 @@ function setup(){
   if(submitted){
     // show
     showContent(false,null);
-
-
   }else{
     // to submit
     showSubmit();
@@ -75,11 +84,18 @@ function setup(){
 }
 
 
-function showContent(playEffect, content){
-  if(playEffect){
+function showContent(fromsubmit, content){
+  console.log("show content");
+  if(fromsubmit){
     // sel.remove();
     // thedate.remove();\
     setDate();
+    thisDate = localStorage.lastDateShow;
+  }else{
+    thisID = localStorage.lastID;
+    thisContent = localStorage.lastContent;
+    thisDate = localStorage.lastDateShow;
+    thisScore = localStorage.lastScore;
   }
   // thedate = document.getElementById('thedate');
   // sel = document.getElementById('sel');
@@ -90,7 +106,8 @@ function showContent(playEffect, content){
   image(showStage,width/7,0,width*0.8,height);
   textSize(15);
   textFont(font);
-  text('01/01/2022',width*0.3,height*0.3);
+
+  text(thisDate, width*0.3,height*0.3);
   if(content == null){
     contentText = localStorage.lastIdea;
     thisID = localStorage.lastID;
@@ -109,9 +126,12 @@ function showContent(playEffect, content){
   like.position(width*0.5, height*0.66);
   dislike.position(width*0.5,height*0.71);
 
-  btn_rescore = createButton('confirm');
-  btn_rescore.position(520, 460);
-  btn_rescore.mousePressed(recall);
+  console.log(localStorage.liked);
+  if(localStorage.liked ==0){
+    btn_rescore = createButton('confirm');
+    btn_rescore.position(520, 460);
+    btn_rescore.mousePressed(recall);
+  }
 }
 
 
@@ -128,20 +148,11 @@ function preload(){
 
 function showSubmit() {
   console.log("showSubmit");
+  localStorage.liked = 0;
   createCanvas(1000,600);
   // image(notebg,width/5,0,width*0.8,height);
-  thedate = document.getElementById('thedate');
-  sel = document.getElementById('sel');
-  value = sel.options[sel.selectedIndex].value;
-  question = document.getElementById('question');
   // sel.changed(mySelectEvent);
-  btn_submit.addEventListener('click',function(event){
-    sel.remove();
-    thedate.remove();
-    notebg.remove();
-    oldmemory.remove();
-    question.remove();
-  });
+  //btn_submit.addEventListener('click',function(event){
   let getVar = variable => getComputedStyle(btn_submit).getPropertyValue(variable);
   btn_submit.addEventListener('click', e=>{
     if(!btn_submit.classList.contains('active')) {
@@ -272,6 +283,7 @@ sqlTest();
 
 function recall(){
   btn_rescore.remove();
+  localStorage.liked = 1;
   if(like.checked())
   {
     likeEvent(thisID);
@@ -335,7 +347,8 @@ function chooseDataHandler(transaction, results)
     console.log(i+" "+contents[i]+" get idea");
     localStorage.lastIdea = contents[i-1];
     localStorage.lastID = thisID;
-
+    localStorage.lastDateShow = dates[i-1];
+    localStorage.lastScore = results.rows.item(i-1)['score'];
     showContent(true, contents[i-1]);
 }
 
